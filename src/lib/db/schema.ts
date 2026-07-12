@@ -1,3 +1,4 @@
+export const schemaSql = `
 -- Jinalaya Database Schema
 -- SQLite-compatible, designed for easy migration to PostgreSQL
 
@@ -41,3 +42,4 @@ CREATE INDEX IF NOT EXISTS idx_temples_state ON temples(state);
 CREATE INDEX IF NOT EXISTS idx_temples_sect ON temples(sect);
 CREATE INDEX IF NOT EXISTS idx_temples_city ON temples(city);
 CREATE INDEX IF NOT EXISTS idx_media_temple_id ON media(temple_id);
+`;

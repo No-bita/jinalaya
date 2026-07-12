@@ -1,6 +1,7 @@
 import { createClient, type Client } from '@libsql/client';
 import path from 'path';
 import fs from 'fs';
+import { schemaSql } from './schema';
 
 let db: Client | null = null;
 
@@ -31,10 +32,7 @@ export async function getDb(): Promise<Client> {
 }
 
 async function initializeSchema(client: Client): Promise<void> {
-  const schemaPath = path.join(process.cwd(), 'src/lib/db/schema.sql');
-  const schema = fs.readFileSync(schemaPath, 'utf-8');
-
-  const statements = schema
+  const statements = schemaSql
     .split(';')
     .map(s => s.trim())
     .filter(s => s.length > 0);
