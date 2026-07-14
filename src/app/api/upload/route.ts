@@ -69,11 +69,11 @@ export async function POST(request: NextRequest) {
           // Generate thumbnail
           const thumbnailBuffer = await image
             .resize(THUMBNAIL_WIDTH, null, { withoutEnlargement: true })
-            .jpeg({ quality: THUMBNAIL_QUALITY })
+            .webp({ quality: THUMBNAIL_QUALITY })
             .toBuffer();
 
-          thumbnailKey = `thumbnails/${fileId}.jpg`;
-          await storage.upload(thumbnailKey, thumbnailBuffer, 'image/jpeg');
+          thumbnailKey = `thumbnails/${fileId}.webp`;
+          await storage.upload(thumbnailKey, thumbnailBuffer, 'image/webp');
 
           // Extract EXIF data
           try {

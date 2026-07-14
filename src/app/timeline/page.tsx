@@ -59,6 +59,8 @@ export default function TimelinePage() {
     );
   }
 
+  let absoluteIndex = 0;
+
   return (
     <div className="mx-auto max-w-3xl px-4 sm:px-6 py-6">
       {/* Header */}
@@ -111,6 +113,8 @@ export default function TimelinePage() {
                           const coverUrl = temple.cover_image
                             ? `/uploads/${temple.cover_image.thumbnail_key || temple.cover_image.storage_key}`
                             : null;
+                          const isPriority = absoluteIndex < 3;
+                          absoluteIndex++;
 
                           return (
                             <Link
@@ -131,6 +135,7 @@ export default function TimelinePage() {
                                       fill
                                       className="object-cover"
                                       sizes="64px"
+                                      priority={isPriority}
                                     />
                                   ) : (
                                     <div className="flex h-full items-center justify-center">
