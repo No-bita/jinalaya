@@ -23,10 +23,23 @@ export function MediaUploader({ files, onFilesChange, maxFiles = 20 }: MediaUplo
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      const newFiles = [...files, ...acceptedFiles].slice(0, maxFiles);
+      const validFiles: File[] = [];
+      const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+
+      for (const file of acceptedFiles) {
+        if (file.type.startsWith('image/') && file.size > MAX_IMAGE_SIZE) {
+          alert(`Image "${file.name}" is too large. Images must be under 10MB.`);
+          continue;
+        }
+        validFiles.push(file);
+      }
+
+      if (validFiles.length === 0) return;
+
+      const newFiles = [...files, ...validFiles].slice(0, maxFiles);
       onFilesChange(newFiles);
 
-      const newPreviews = acceptedFiles.map((file) => ({
+      const newPreviews = validFiles.map((file) => ({
         file,
         preview: URL.createObjectURL(file),
         type: (file.type.startsWith('image/') ? 'image' : 'video') as 'image' | 'video',

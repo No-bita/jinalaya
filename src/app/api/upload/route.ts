@@ -6,7 +6,7 @@ import { SQLiteMediaRepository } from '@/lib/db/sqlite-repository';
 
 const mediaRepo = new SQLiteMediaRepository();
 
-const MAX_IMAGE_SIZE = 20 * 1024 * 1024; // 20MB
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100MB
 const THUMBNAIL_WIDTH = 400;
 const THUMBNAIL_QUALITY = 80;
