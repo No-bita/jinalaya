@@ -9,7 +9,8 @@ export function getMediaUrl(key: string | null | undefined): string {
   if (!key) return '';
   const domain = process.env.NEXT_PUBLIC_MEDIA_DOMAIN;
   if (domain) {
-    return `https://${domain}/${key}`;
+    const cleanDomain = domain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    return `https://${cleanDomain}/${key}`;
   }
   return `/uploads/${key}`;
 }
