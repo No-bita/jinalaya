@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { SQLiteTempleRepository } from '@/lib/db/sqlite-repository';
+import { getMediaUrl } from '@/lib/utils';
 
 const templeRepo = new SQLiteTempleRepository();
 
@@ -15,7 +16,7 @@ export async function GET() {
         media: t.media.map(m => ({
           ...m,
           // Don't include internal storage keys in export
-          url: `/uploads/${m.storage_key}`,
+          url: getMediaUrl(m.storage_key),
         })),
       })),
     };

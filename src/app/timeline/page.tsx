@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Calendar, Landmark, MapPin } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { TempleWithMedia } from '@/lib/types';
+import { getMediaUrl } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 
 interface GroupedTimeline {
@@ -111,7 +112,7 @@ export default function TimelinePage() {
                       <div className="relative pl-6 border-l-2 border-border space-y-4">
                         {grouped[year][month].map((temple) => {
                           const coverUrl = temple.cover_image
-                            ? `/uploads/${temple.cover_image.thumbnail_key || temple.cover_image.storage_key}`
+                            ? getMediaUrl(temple.cover_image.thumbnail_key || temple.cover_image.storage_key)
                             : null;
                           const isPriority = absoluteIndex < 3;
                           absoluteIndex++;

@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Loader2 } from 'lucide-react';
+import { getMediaUrl } from '@/lib/utils';
 import type { TempleWithMedia } from '@/lib/types';
 
 // Dynamic imports to avoid SSR issues with Leaflet
@@ -96,7 +98,7 @@ export function MapView({
                 {temple.cover_image && (
                   <div className="w-full h-32 overflow-hidden rounded-t-lg -mt-[14px] -mx-[20px] mb-3" style={{ width: 'calc(100% + 40px)' }}>
                     <img
-                      src={`/uploads/${temple.cover_image.thumbnail_key || temple.cover_image.storage_key}`}
+                      src={getMediaUrl(temple.cover_image.thumbnail_key || temple.cover_image.storage_key)}
                       alt={temple.name}
                       className="w-full h-full object-cover"
                     />

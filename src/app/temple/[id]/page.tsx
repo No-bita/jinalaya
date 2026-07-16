@@ -31,6 +31,7 @@ import { ImageGallery } from '@/components/temple/ImageGallery';
 import { MapView } from '@/components/map/MapView';
 import type { TempleWithMedia } from '@/lib/types';
 import { format, parseISO } from 'date-fns';
+import { getMediaUrl } from '@/lib/utils';
 
 export default function TempleDetailPage({
   params,
@@ -268,7 +269,7 @@ export default function TempleDetailPage({
                 className="w-full rounded-xl bg-black"
                 preload="metadata"
               >
-                <source src={`/uploads/${video.storage_key}`} type={video.mime_type || 'video/mp4'} />
+                <source src={getMediaUrl(video.storage_key)} type={video.mime_type || 'video/mp4'} />
               </video>
             ))}
           </div>

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, getMediaUrl } from '@/lib/utils';
 import type { Media } from '@/lib/types';
 
 interface ImageGalleryProps {
@@ -47,7 +47,7 @@ export function ImageGallery({ media }: ImageGalleryProps) {
               )}
             >
               <Image
-                src={`/uploads/${img.thumbnail_key || img.storage_key}`}
+                src={getMediaUrl(img.thumbnail_key || img.storage_key)}
                 alt={`Photo ${index + 1}`}
                 fill
                 className="object-cover"
@@ -96,7 +96,7 @@ export function ImageGallery({ media }: ImageGalleryProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <Image
-              src={`/uploads/${images[selectedIndex].storage_key}`}
+              src={getMediaUrl(images[selectedIndex].storage_key)}
               alt={`Photo ${selectedIndex + 1}`}
               width={images[selectedIndex].width || 1200}
               height={images[selectedIndex].height || 800}

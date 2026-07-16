@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { MapPin, Calendar, Landmark } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { TempleWithMedia } from '@/lib/types';
+import { getMediaUrl } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 
 interface TempleCardProps {
@@ -14,7 +15,7 @@ interface TempleCardProps {
 
 export function TempleCard({ temple, index = 0 }: TempleCardProps) {
   const coverUrl = temple.cover_image
-    ? `/uploads/${temple.cover_image.thumbnail_key || temple.cover_image.storage_key}`
+    ? getMediaUrl(temple.cover_image.thumbnail_key || temple.cover_image.storage_key)
     : null;
 
   const visitDate = (() => {
