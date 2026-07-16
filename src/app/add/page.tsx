@@ -179,7 +179,10 @@ export default function AddTemplePage() {
         }),
       });
 
-      if (!templeRes.ok) throw new Error('Failed to create temple');
+      if (!templeRes.ok) {
+        const errData = await templeRes.json().catch(() => null);
+        throw new Error(errData?.error || 'Failed to create temple');
+      }
       const temple = await templeRes.json();
 
       // 2. Upload media if any
@@ -201,9 +204,9 @@ export default function AddTemplePage() {
       }
 
       router.push(`/temple/${temple.id}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating temple:', error);
-      alert('Failed to create temple. Please try again.');
+      alert(error?.message || 'Failed to create temple. Please try again.');
     } finally {
       setLoading(false);
     }

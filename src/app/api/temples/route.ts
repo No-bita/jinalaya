@@ -49,8 +49,17 @@ export async function POST(request: NextRequest) {
     const temple = await templeRepo.create(body);
 
     return NextResponse.json(temple, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating temple:', error);
+    
+    // Handle SQLite unique constraint violations
+    if (error?.message?.includes('UNIQUE constraint failed')) {
+      return NextResponse.json(
+        { error: 'You have already recorded a visit to this temple on this date.' },
+        { status: 409 }
+      );
+    }
+    
     return NextResponse.json({ error: 'Failed to create temple' }, { status: 500 });
   }
 }

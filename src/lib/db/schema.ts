@@ -42,4 +42,7 @@ CREATE INDEX IF NOT EXISTS idx_temples_state ON temples(state);
 CREATE INDEX IF NOT EXISTS idx_temples_sect ON temples(sect);
 CREATE INDEX IF NOT EXISTS idx_temples_city ON temples(city);
 CREATE INDEX IF NOT EXISTS idx_media_temple_id ON media(temple_id);
+
+-- Ensure a user cannot log the exact same temple (by name and location) on the same day
+CREATE UNIQUE INDEX IF NOT EXISTS idx_temples_unique_visit ON temples(name, city, state, visit_date);
 `;
