@@ -46,6 +46,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate location requirement
+    if (!(body.latitude && body.longitude) && !body.google_maps_url) {
+      return NextResponse.json(
+        { error: 'Please provide either exact coordinates or a Google Maps URL.' },
+        { status: 400 }
+      );
+    }
+
     const temple = await templeRepo.create(body);
 
     return NextResponse.json(temple, { status: 201 });

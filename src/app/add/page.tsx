@@ -151,6 +151,11 @@ export default function AddTemplePage() {
       return;
     }
 
+    if (!(latitude && longitude) && !googleMapsUrl) {
+      alert('Please provide either Auto-detected coordinates or a Google Maps URL.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -272,8 +277,13 @@ export default function AddTemplePage() {
 
         {/* Location */}
         <section className="space-y-4 animate-fade-in stagger-3 opacity-0">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-medium text-foreground">Location</h2>
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <h2 className="text-sm font-medium text-foreground">Location</h2>
+              <p className="text-[11px] text-muted-foreground mt-0.5">
+                * Required: Auto-detect, manual coordinates, or Google Maps URL
+              </p>
+            </div>
             <Button
               type="button"
               variant="outline"
@@ -443,7 +453,7 @@ export default function AddTemplePage() {
         <div className="pt-4 animate-fade-in stagger-6 opacity-0">
           <Button
             type="submit"
-            disabled={loading || !name || !deityName || !city || !state}
+            disabled={loading || !name || !deityName || !city || !state || (!(latitude && longitude) && !googleMapsUrl)}
             className="w-full h-12 rounded-xl text-base font-medium shadow-lg shadow-primary/20"
           >
             {loading ? (
