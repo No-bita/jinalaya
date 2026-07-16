@@ -154,8 +154,10 @@ export default function TimelinePage() {
                                     {temple.deity_name}
                                   </p>
                                   <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground">
-                                    <MapPin className="h-3 w-3" />
-                                    <span>{temple.city}, {temple.state}</span>
+                                    <MapPin className="h-3 w-3 shrink-0" />
+                                    <span className="truncate">{temple.city}, {temple.state}</span>
+                                    <span className="mx-1 opacity-50 shrink-0">•</span>
+                                    <span className="shrink-0">{format(parseISO(temple.visit_date), 'd MMM')}</span>
                                   </div>
                                 </div>
                               </div>
