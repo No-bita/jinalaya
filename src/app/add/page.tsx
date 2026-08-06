@@ -267,13 +267,13 @@ export default function AddTemplePage() {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Media Upload */}
-        <section className="animate-fade-in stagger-1 opacity-0">
+        <section className="animate-fade-in stagger-1">
           <label className="text-sm font-medium mb-3 block">Photos & Videos</label>
           <MediaUploader files={files} onFilesChange={setFiles} />
         </section>
 
         {/* Temple Info */}
-        <section className="space-y-4 animate-fade-in stagger-2 opacity-0">
+        <section className="space-y-4 animate-fade-in stagger-2">
           <h2 className="text-sm font-medium text-foreground">Temple Information</h2>
 
           <div className="space-y-3">
@@ -281,7 +281,6 @@ export default function AddTemplePage() {
               placeholder="Temple Name *"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required
               className={`h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 ${
                 isFieldMissing('name') ? 'ring-2 ring-destructive bg-destructive/5' : ''
               }`}
@@ -290,7 +289,6 @@ export default function AddTemplePage() {
               placeholder="Moolnayak / Deity Name *"
               value={deityName}
               onChange={(e) => setDeityName(e.target.value)}
-              required
               className={`h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 ${
                 isFieldMissing('deityName') ? 'ring-2 ring-destructive bg-destructive/5' : ''
               }`}
@@ -309,7 +307,7 @@ export default function AddTemplePage() {
         </section>
 
         {/* Location */}
-        <section className="space-y-4 animate-fade-in stagger-3 opacity-0">
+        <section className="space-y-4 animate-fade-in stagger-3">
           <div className="flex items-start justify-between mb-4">
             <div>
               <h2 className="text-sm font-medium text-foreground">Location</h2>
@@ -339,7 +337,6 @@ export default function AddTemplePage() {
               placeholder="City *"
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              required
               className={`h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 ${
                 isFieldMissing('city') ? 'ring-2 ring-destructive bg-destructive/5' : ''
               }`}
@@ -416,14 +413,13 @@ export default function AddTemplePage() {
         </section>
 
         {/* Visit Details */}
-        <section className="space-y-4 animate-fade-in stagger-4 opacity-0">
+        <section className="space-y-4 animate-fade-in stagger-4">
           <h2 className="text-sm font-medium text-foreground">Visit Details</h2>
 
           <Input
             type="date"
             value={visitDate}
             onChange={(e) => setVisitDate(e.target.value)}
-            required
             className={`h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 ${
               isFieldMissing('visitDate') ? 'ring-2 ring-destructive bg-destructive/5' : ''
             }`}
@@ -450,7 +446,7 @@ export default function AddTemplePage() {
         </section>
 
         {/* Tags */}
-        <section className="space-y-3 animate-fade-in stagger-5 opacity-0">
+        <section className="space-y-3 animate-fade-in stagger-5">
           <h2 className="text-sm font-medium text-foreground">Tags (optional)</h2>
 
           <div className="flex gap-2">
@@ -512,11 +508,11 @@ export default function AddTemplePage() {
         )}
 
         {/* Submit */}
-        <div className="pt-4 animate-fade-in stagger-6 opacity-0">
+        <div className="pt-4 animate-fade-in stagger-6">
           <Button
             type="submit"
             disabled={loading}
-            className="w-full h-12 rounded-xl text-base font-medium shadow-lg shadow-primary/20"
+            className="w-full h-12 rounded-xl text-base font-medium shadow-lg shadow-primary/20 cursor-pointer"
           >
             {loading ? (
               <>
