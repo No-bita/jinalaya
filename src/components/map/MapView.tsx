@@ -10,6 +10,7 @@ let MapContainer: typeof import('react-leaflet').MapContainer;
 let TileLayer: typeof import('react-leaflet').TileLayer;
 let Marker: typeof import('react-leaflet').Marker;
 let Popup: typeof import('react-leaflet').Popup;
+let useMapHook: typeof import('react-leaflet').useMap;
 let L: typeof import('leaflet');
 
 interface MapViewProps {
@@ -18,6 +19,23 @@ interface MapViewProps {
   zoom?: number;
   className?: string;
   singleMarker?: boolean;
+}
+
+function MapController({ bounds, center, singleMarker }: { bounds?: [number, number][]; center?: [number, number]; singleMarker?: boolean }) {
+  const map = useMapHook();
+
+  useEffect(() => {
+    if (!map) return;
+    if (bounds && bounds.length > 1) {
+      map.fitBounds(bounds as L.LatLngBoundsExpression, { padding: [50, 50], maxZoom: 14 });
+    } else if (bounds && bounds.length === 1) {
+      map.setView(bounds[0], singleMarker ? 14 : 10);
+    } else if (center) {
+      map.setView(center, map.getZoom());
+    }
+  }, [map, bounds, center, singleMarker]);
+
+  return null;
 }
 
 export function MapView({
@@ -40,6 +58,7 @@ export function MapView({
       TileLayer = rl.TileLayer;
       Marker = rl.Marker;
       Popup = rl.Popup;
+      useMapHook = rl.useMap;
       L = leaflet.default || leaflet;
 
       // Fix default marker icons
@@ -58,15 +77,18 @@ export function MapView({
   if (!isLoaded) {
     return (
       <div className={`${className} rounded-xl bg-muted flex items-center justify-center`}>
-        <div className="text-muted-foreground text-sm">Loading map…</div>
+        <div className="flex items-center gap-2 text-muted-foreground text-sm">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          Loading map…
+        </div>
       </div>
     );
   }
 
-  const templesWithCoords = temples.filter(t => t.latitude && t.longitude);
+  const templesWithCoords = temples.filter(t => typeof t.latitude === 'number' && typeof t.longitude === 'number');
 
   // Calculate bounds if we have temples with coordinates
-  const bounds = templesWithCoords.length > 0 && !singleMarker
+  const bounds = templesWithCoords.length > 0
     ? templesWithCoords.map(t => [t.latitude!, t.longitude!] as [number, number])
     : undefined;
 
@@ -80,9 +102,10 @@ export function MapView({
         }
         zoom={singleMarker ? 14 : zoom}
         className="h-full w-full z-0"
-        bounds={bounds && bounds.length > 1 ? (L!.latLngBounds(bounds) as unknown as undefined) : undefined}
         scrollWheelZoom={!singleMarker}
       >
+        <MapController bounds={bounds} center={center} singleMarker={singleMarker} />
+
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
