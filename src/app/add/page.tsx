@@ -69,8 +69,6 @@ export default function AddTemplePage() {
   const [visitDate, setVisitDate] = useState(new Date().toISOString().split('T')[0]);
   const [notes, setNotes] = useState('');
   const [status, setStatus] = useState<TempleStatus>('active');
-  const [tagsInput, setTagsInput] = useState('');
-  const [tags, setTags] = useState<string[]>([]);
 
   const detectLocation = async () => {
     if (!navigator.geolocation) {
@@ -125,23 +123,11 @@ export default function AddTemplePage() {
             break;
         }
         console.warn('Geolocation error:', error.message);
-        alert(errorMessage + '\\n\\nPlease enter coordinates manually or use a Google Maps URL.');
+        alert(errorMessage + '\n\nPlease enter coordinates manually or use a Google Maps URL.');
         setDetectingLocation(false);
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
-  };
-
-  const addTag = (tag: string) => {
-    const trimmed = tag.trim();
-    if (trimmed && !tags.includes(trimmed)) {
-      setTags([...tags, trimmed]);
-    }
-    setTagsInput('');
-  };
-
-  const removeTag = (tag: string) => {
-    setTags(tags.filter(t => t !== tag));
   };
 
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -155,7 +141,7 @@ export default function AddTemplePage() {
     if (!state) missing.push('State');
     if (!visitDate) missing.push('Visit Date');
     if (!(latitude && longitude) && !googleMapsUrl.trim()) {
-      missing.push('Location (Auto-detect location, set coordinates, or paste Google Maps URL)');
+      missing.push('Location (Auto-detect, Latitude & Longitude, or Google Maps URL)');
     }
     return missing;
   };
@@ -196,7 +182,6 @@ export default function AddTemplePage() {
           visit_date: visitDate,
           notes: notes || undefined,
           status,
-          tags: tags.length > 0 ? tags : undefined,
         }),
       });
 
@@ -312,7 +297,7 @@ export default function AddTemplePage() {
             <div>
               <h2 className="text-sm font-medium text-foreground">Location</h2>
               <p className="text-[11px] text-muted-foreground mt-0.5">
-                * Required: Auto-detect, manual coordinates, or Google Maps URL
+                * Required: City, State, and either Auto-detect, Coordinates, or Google Maps URL
               </p>
             </div>
             <Button
@@ -357,7 +342,7 @@ export default function AddTemplePage() {
 
           <div className="grid grid-cols-2 gap-3">
             <Input
-              placeholder="Latitude"
+              placeholder="Latitude *"
               value={latitude}
               onChange={(e) => setLatitude(e.target.value)}
               type="number"
@@ -367,7 +352,7 @@ export default function AddTemplePage() {
               }`}
             />
             <Input
-              placeholder="Longitude"
+              placeholder="Longitude *"
               value={longitude}
               onChange={(e) => setLongitude(e.target.value)}
               type="number"
@@ -379,7 +364,7 @@ export default function AddTemplePage() {
           </div>
 
           <Input
-            placeholder="Google Maps URL (optional)"
+            placeholder="Google Maps URL *"
             value={googleMapsUrl}
             onChange={(e) => {
               const url = e.target.value;
@@ -443,51 +428,6 @@ export default function AddTemplePage() {
             rows={4}
             className="rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 resize-none"
           />
-        </section>
-
-        {/* Tags */}
-        <section className="space-y-3 animate-fade-in stagger-5">
-          <h2 className="text-sm font-medium text-foreground">Tags (optional)</h2>
-
-          <div className="flex gap-2">
-            <Input
-              placeholder="Add a tag…"
-              value={tagsInput}
-              onChange={(e) => setTagsInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  addTag(tagsInput);
-                }
-              }}
-              className="h-10 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30"
-            />
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => addTag(tagsInput)}
-              className="rounded-lg h-10"
-            >
-              Add
-            </Button>
-          </div>
-
-          {tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="secondary"
-                  className="gap-1 cursor-pointer hover:bg-destructive/10 transition-colors"
-                  onClick={() => removeTag(tag)}
-                >
-                  {tag}
-                  <span className="text-muted-foreground">×</span>
-                </Badge>
-              ))}
-            </div>
-          )}
         </section>
 
         {/* Validation Errors Notice */}
