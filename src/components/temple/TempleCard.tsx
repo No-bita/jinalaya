@@ -89,16 +89,6 @@ export function TempleCard({ temple, index = 0 }: TempleCardProps) {
             </span>
           </div>
 
-          {/* Tags */}
-          {temple.tags && temple.tags.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {temple.tags.slice(0, 3).map((tag) => (
-                <Badge key={tag} variant="outline" className="text-[10px] px-1.5 py-0 font-normal">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          )}
         </div>
       </article>
     </Link>

@@ -227,21 +227,6 @@ export default function TempleDetailPage({
         </div>
       </div>
 
-      {/* Tags */}
-      {temple.tags && temple.tags.length > 0 && (
-        <div className="mb-8 animate-fade-in stagger-4 opacity-0">
-          <div className="flex items-center gap-2 mb-3">
-            <Tag className="h-4 w-4 text-muted-foreground" />
-            <p className="text-sm font-medium">Tags</p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {temple.tags.map((tag) => (
-              <Badge key={tag} variant="outline">{tag}</Badge>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Notes */}
       {temple.notes && (
         <div className="mb-8 animate-fade-in stagger-4 opacity-0">
