@@ -7,6 +7,7 @@ import {
   Loader2,
   ChevronLeft,
   Navigation,
+  AlertCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -143,19 +144,34 @@ export default function AddTemplePage() {
     setTags(tags.filter(t => t !== tag));
   };
 
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [showValidationNotice, setShowValidationNotice] = useState(false);
+
+  const getMissingFields = () => {
+    const missing: string[] = [];
+    if (!name.trim()) missing.push('Temple Name');
+    if (!deityName.trim()) missing.push('Moolnayak / Deity Name');
+    if (!city.trim()) missing.push('City');
+    if (!state) missing.push('State');
+    if (!visitDate) missing.push('Visit Date');
+    if (!(latitude && longitude) && !googleMapsUrl.trim()) {
+      missing.push('Location (Auto-detect location, set coordinates, or paste Google Maps URL)');
+    }
+    return missing;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name || !deityName || !city || !state || !visitDate) {
-      alert('Please fill in all required fields');
+    const missing = getMissingFields();
+    if (missing.length > 0) {
+      setValidationErrors(missing);
+      setShowValidationNotice(true);
       return;
     }
 
-    if (!(latitude && longitude) && !googleMapsUrl) {
-      alert('Please provide either Auto-detected coordinates or a Google Maps URL.');
-      return;
-    }
-
+    setValidationErrors([]);
+    setShowValidationNotice(false);
     setLoading(true);
 
     try {
@@ -217,6 +233,19 @@ export default function AddTemplePage() {
     }
   };
 
+  const isFieldMissing = (field: 'name' | 'deityName' | 'city' | 'state' | 'visitDate' | 'location') => {
+    if (!showValidationNotice) return false;
+    switch (field) {
+      case 'name': return !name.trim();
+      case 'deityName': return !deityName.trim();
+      case 'city': return !city.trim();
+      case 'state': return !state;
+      case 'visitDate': return !visitDate;
+      case 'location': return !(latitude && longitude) && !googleMapsUrl.trim();
+      default: return false;
+    }
+  };
+
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 py-6">
       {/* Header */}
@@ -253,14 +282,18 @@ export default function AddTemplePage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30"
+              className={`h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 ${
+                isFieldMissing('name') ? 'ring-2 ring-destructive bg-destructive/5' : ''
+              }`}
             />
             <Input
               placeholder="Moolnayak / Deity Name *"
               value={deityName}
               onChange={(e) => setDeityName(e.target.value)}
               required
-              className="h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30"
+              className={`h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 ${
+                isFieldMissing('deityName') ? 'ring-2 ring-destructive bg-destructive/5' : ''
+              }`}
             />
             <Select value={sect} onValueChange={(v) => setSect(v ?? '')}>
               <SelectTrigger className="h-12 rounded-xl bg-muted/50 border-0">
@@ -307,10 +340,14 @@ export default function AddTemplePage() {
               value={city}
               onChange={(e) => setCity(e.target.value)}
               required
-              className="h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30"
+              className={`h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 ${
+                isFieldMissing('city') ? 'ring-2 ring-destructive bg-destructive/5' : ''
+              }`}
             />
             <Select value={state} onValueChange={(v) => setState(v ?? '')}>
-              <SelectTrigger className="h-12 rounded-xl bg-muted/50 border-0">
+              <SelectTrigger className={`h-12 rounded-xl bg-muted/50 border-0 ${
+                isFieldMissing('state') ? 'ring-2 ring-destructive bg-destructive/5' : ''
+              }`}>
                 <SelectValue placeholder="State *" />
               </SelectTrigger>
               <SelectContent>
@@ -328,7 +365,9 @@ export default function AddTemplePage() {
               onChange={(e) => setLatitude(e.target.value)}
               type="number"
               step="any"
-              className="h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30"
+              className={`h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 ${
+                isFieldMissing('location') ? 'ring-2 ring-destructive/70 bg-destructive/5' : ''
+              }`}
             />
             <Input
               placeholder="Longitude"
@@ -336,7 +375,9 @@ export default function AddTemplePage() {
               onChange={(e) => setLongitude(e.target.value)}
               type="number"
               step="any"
-              className="h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30"
+              className={`h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 ${
+                isFieldMissing('location') ? 'ring-2 ring-destructive/70 bg-destructive/5' : ''
+              }`}
             />
           </div>
 
@@ -354,7 +395,9 @@ export default function AddTemplePage() {
               }
             }}
             type="url"
-            className="h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30"
+            className={`h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 ${
+              isFieldMissing('location') ? 'ring-2 ring-destructive/70 bg-destructive/5' : ''
+            }`}
           />
 
           {latitude && longitude && (
@@ -381,7 +424,9 @@ export default function AddTemplePage() {
             value={visitDate}
             onChange={(e) => setVisitDate(e.target.value)}
             required
-            className="h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30"
+            className={`h-12 rounded-xl bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/30 ${
+              isFieldMissing('visitDate') ? 'ring-2 ring-destructive bg-destructive/5' : ''
+            }`}
           />
 
           <Select value={status} onValueChange={(v) => setStatus((v ?? 'active') as TempleStatus)}>
@@ -449,11 +494,28 @@ export default function AddTemplePage() {
           )}
         </section>
 
+        {/* Validation Errors Notice */}
+        {showValidationNotice && validationErrors.length > 0 && (
+          <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-destructive animate-fade-in">
+            <div className="flex items-start gap-2.5">
+              <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <p className="text-sm font-semibold">Please complete the required fields before saving:</p>
+                <ul className="list-disc list-inside text-xs space-y-0.5 text-destructive/90">
+                  {validationErrors.map((err) => (
+                    <li key={err}>{err}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Submit */}
         <div className="pt-4 animate-fade-in stagger-6 opacity-0">
           <Button
             type="submit"
-            disabled={loading || !name || !deityName || !city || !state || (!(latitude && longitude) && !googleMapsUrl)}
+            disabled={loading}
             className="w-full h-12 rounded-xl text-base font-medium shadow-lg shadow-primary/20"
           >
             {loading ? (
